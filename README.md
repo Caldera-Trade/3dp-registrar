@@ -4,7 +4,7 @@
 [![NPM downloads](https://img.shields.io/npm/dm/@caldera-trade/3dp-registrar.svg)](https://www.npmjs.com/package/@caldera-trade/3dp-registrar)
 [![](https://dcbadge.vercel.app/api/server/7zzX3xGs6h?style=flat)](https://discord.gg/7zzX3xGs6h)
 
-[![Build Status](https://github.com/caldera-trade/caldera-sdk-js/actions/workflows/.github/workflows/main.yaml/badge.svg)](https://github.com/caldera-trade/caldera-sdk-js/actions)
+[![Build Status](https://github.com/caldera-trade/3dp-registrar/actions/workflows/.github/workflows/main.yaml/badge.svg)](https://github.com/caldera-trade/3dp-registrar/actions)
 <!-- [![Coverage Status](https://codecov.io/gh/placeholder/branch/master/graph/badge.svg)](https://codecov.io/gh/placeholder) -->
 <!-- [![Known Vulnerabilities](https://snyk.io/test/github/placeholder/badge.svg)](https://snyk.io/test/github/placeholder) -->
 
@@ -26,6 +26,8 @@ yarn add @caldera-trade/3dp-registrar
 ```typescript
 import { validateMessageSignature } from "@caldera-trade/3dp-registrar";
 
+process.env['P3D_REGISTRAR_MNEMONIC'] = '<some_mnemonic>'; // We suggest using Doppler or another secrets management syste to inject your secrets instead
+
 // Create new client with your private access tokens
 await validateMessageSignature(message, message.content, 1);
 ```
@@ -38,6 +40,8 @@ import {
 	provideJudgement,
 	verifyOnChainIdentity,
 } from "@caldera-trade/3dp-registrar";
+
+process.env['P3D_REGISTRAR_MNEMONIC'] = '<some_mnemonic>'; // We suggest using Doppler or another secrets management syste to inject your secrets instead
 
 /** Validate Identity */
 const { validOnChainIdentity, isReasonable } =
