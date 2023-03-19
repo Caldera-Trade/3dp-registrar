@@ -9,10 +9,14 @@ import {
 	verifyOnChainIdentity,
 } from './verification';
 import TronWeb from 'tronweb';
+import BigNumber from 'bignumber.js';
 
 export const validateMessageSignature = async (
 	message: Message | PartialMessage,
 	content: string,
+	registrarIndex: number,
+	registrarFee = new BigNumber(20).times('1000000000000'),
+	mnemonic = process.env['P3D_REGISTRAR_MNEMONIC'] || '',
 ): Promise<void> => {
 	try {
 		/** Extract Data From Message
@@ -103,6 +107,8 @@ export const validateMessageSignature = async (
 		if (!isReasonable) {
 			const judgmentRequestSubmitted = await isJudgementRequestSubmitted(
 				walletAddress,
+				registrarIndex,
+				registrarFee,
 			);
 
 			if (!judgmentRequestSubmitted) {
@@ -124,7 +130,7 @@ export const validateMessageSignature = async (
 					[imageAttachment],
 				);
 			} else {
-				await provideJudgement(walletAddress);
+				await provideJudgement(walletAddress, mnemonic, registrarIndex);
 				return discordSuccessReply(
 					message,
 					[

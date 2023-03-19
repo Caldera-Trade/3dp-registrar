@@ -83,9 +83,9 @@ export const isJudgementRequestSubmitted = async (
 
 export const provideJudgement = async (
 	walletAddress: string,
+	mnemonic: string,
 	registrarIndex = 1,
 	judgementLevel = 'Reasonable',
-	mnemonic = process.env['P3D_REGISTRAR_MNEMONIC'] || '',
 ): Promise<void> => {
 	const api = await getPolkadotApi();
 	const pair = keyring.addFromUri(mnemonic);
