@@ -1,6 +1,6 @@
 {
 	"name": "@caldera-trade/3dp-registrar",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"packageManager": "yarn@3.2.4",
 	"type": "module",
 	"publishConfig": {
