@@ -5,6 +5,7 @@ import { u8aToHex } from '@polkadot/util';
 import { decodeAddress } from '@polkadot/util-crypto';
 import { type ExtrinsicsData, GET_EXTRINSICS } from './queries';
 import BigNumber from 'bignumber.js';
+import TronWeb from 'tronweb';
 export const extractDataAndSignature = (
 	content: string,
 ): { data: string; signature: string } => {
@@ -55,8 +56,17 @@ export const verifyOnChainIdentity = async (
 		{ Raw: string | 'Discord' },
 		{ Raw: string },
 	][];
+
+	if (!additionalIdentities[0])
+		return { hasOnChainIdentity, isReasonable, discordMatches };
+
+	// Convert discordTag string into a hex string
+	const discordTagHex = TronWeb.toHex(discordTag) as string;
+
 	discordMatches = additionalIdentities.some(
-		(x) => x[0].Raw === 'Discord' && x[1].Raw === discordTag,
+		(x) =>
+			x[0].Raw === 'Discord' &&
+			(x[1].Raw === discordTag || x[1].Raw === discordTagHex),
 	);
 
 	/** Validate Reasonably Judged at least once */
