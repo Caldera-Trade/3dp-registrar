@@ -1,0 +1,27 @@
+name: Build on Main
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.repository }}-${{ github.event.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          scope: '@caldera-network'
+          registry-url: 'https://npm.pkg.github.com/'
+      - run: npm i --location=global yarn
+      - run: |
+          yarn
+          yarn build
+          npm pkg set scripts.postinstall="echo no-postinstall"
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,21 @@
+# Other Languages
+*.md
+*.yaml
+
+# Linters & Test
+coverage
+
+# Graphql
+p3d.queries.ts
+
+# Build
+dist
+CHANGELOG.md
+package.json
+
+# Yarn 2
+.pnp.cjs
+.pnp.loader.mjs
+.yarn
+.yarnrc.yml
+yarn.lock

@@ -1,0 +1,17 @@
+# Yarn Zero-Install
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+!.yarn/cache
+
+# Build
+.env
+package-lock.json
+node_modules
+dist
+
+# Jest
+coverage

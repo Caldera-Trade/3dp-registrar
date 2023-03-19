@@ -1,0 +1,3 @@
+# Yarn 2 Zero-Installs
+/.yarn/releases/** binary
+/.yarn/plugins/** binary
