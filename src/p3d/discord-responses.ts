@@ -88,16 +88,29 @@ export const validateMessageSignature = async (
 		}
 
 		/** Validate On-Chain-Identity */
-		const { validOnChainIdentity, isReasonable } =
-			await verifyOnChainIdentity(walletAddress);
-		if (!validOnChainIdentity) {
+		const { isReasonable, discordMatches, hasOnChainIdentity } =
+			await verifyOnChainIdentity(walletAddress, message.member.user.tag);
+		if (!hasOnChainIdentity) {
 			return discordErrorReply(
 				message,
 				[
-					`On-chain identity is invalid, please set up on-chain identity here: https://polkadot.js.org/apps/#/accounts.`,
+					`On-chain identity is invalid, please set up on-chain identity here: https://polkadot.js.org/apps/#/accounts`,
 					``,
 					`After your account is added, click the three dots next to your account and select "Set on-chain identity".`,
 					`Once the identity is accepted by the chain, please try again.`,
+				].join('\n'),
+				90_000,
+			);
+		}
+
+		if (!discordMatches) {
+			return discordErrorReply(
+				message,
+				[
+					`On-chain identity is invalid, ${message.member.user.tag} was not found in the \`discord\` Identity.`,
+					`Please update your on-chain identity's \`discord\` information here: https://polkadot.js.org/apps/#/accounts`,
+					``,
+					`Once the identity update is accepted by the chain, please try again.`,
 				].join('\n'),
 				90_000,
 			);

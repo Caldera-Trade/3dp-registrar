@@ -26,24 +26,49 @@ const cleanContent = (input: string) => {
 /** Require On-Chain state to be set with a Display Name */
 export const verifyOnChainIdentity = async (
 	walletAddress: string,
-): Promise<{ validOnChainIdentity: boolean; isReasonable: boolean }> => {
+	discordTag: string,
+): Promise<{
+	hasOnChainIdentity: boolean;
+	isReasonable: boolean;
+	discordMatches: boolean;
+}> => {
+	let hasOnChainIdentity = false;
+	let discordMatches = false;
+	let isReasonable = false;
+
 	const api = await getPolkadotApi();
 	const identity = await api.query.identity.identityOf(walletAddress);
-	if (identity.isNone) {
-		return { validOnChainIdentity: false, isReasonable: false };
+	if (
+		identity.isNone ||
+		identity.value.info.display.toString().length === 0
+	) {
+		return {
+			hasOnChainIdentity,
+			isReasonable,
+			discordMatches,
+		};
 	}
+	hasOnChainIdentity = true;
+
+	/** Validate Discord Tag Matches Users, and is somewhere in the message */
+	const additionalIdentities = identity.value.info.additional.toHuman() as [
+		{ Raw: string | 'Discord' },
+		{ Raw: string },
+	][];
+	discordMatches = additionalIdentities.some(
+		(x) => x[0].Raw === 'Discord' && x[1].Raw === discordTag,
+	);
+
+	/** Validate Reasonably Judged at least once */
 	const humanReadable = identity.value.judgements.toHuman() as [
 		string,
 		string | 'Reasonable',
 	][];
-	const isReasonable = humanReadable.some(
+	isReasonable = humanReadable.some(
 		(judgement) => judgement[1] === 'Reasonable',
 	);
 
-	if (identity.value.info.display.toString().length === 0) {
-		return { validOnChainIdentity: false, isReasonable };
-	}
-	return { validOnChainIdentity: true, isReasonable };
+	return { hasOnChainIdentity, isReasonable, discordMatches };
 };
 
 /** Validate Judgement Extrinsic is on chain for our registrarIndex and above our registrarFee */
