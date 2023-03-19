@@ -1,5 +1,5 @@
 import { stringToU8a } from '@polkadot/util';
-import { signatureVerify } from '@polkadot/util-crypto';
+import { sr25519Verify } from '@polkadot/util-crypto';
 import { AttachmentBuilder, Message, PartialMessage } from 'discord.js';
 import { requestJudgementImage } from './assets/request-judgement';
 import {
@@ -69,11 +69,7 @@ export const validateMessageSignature = async (
 
 		/** Validate Signature Matches Data Provided */
 		const signatureData = stringToU8a(data.replaceAll('!@#$%', ' '));
-		const { isValid } = signatureVerify(
-			signatureData,
-			signature,
-			walletAddress,
-		);
+		const isValid = sr25519Verify(signatureData, signature, walletAddress);
 		if (!isValid) {
 			return discordErrorReply(
 				message,
