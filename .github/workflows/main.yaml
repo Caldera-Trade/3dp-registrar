@@ -15,8 +15,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-          scope: '@caldera-network'
-          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@caldera-trade'
+          registry-url: 'https://registry.npmjs.org'
       - run: npm i --location=global yarn
       - run: |
           yarn
