@@ -21,7 +21,9 @@ export const extractDataAndSignature = (
 };
 
 const cleanContent = (input: string) => {
-	return input.replace(/\n/g, '!@#$%').slice(5, -5);
+	const cleanedInput = input.trim().replace(/\n/g, '!@#$%').slice(5, -5); // TODO: replace slice with getBetween !@#$% and !@#$%
+
+	return cleanedInput;
 };
 
 /** Require On-Chain state to be set with a Display Name */
