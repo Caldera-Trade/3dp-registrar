@@ -6,24 +6,33 @@ import { decodeAddress } from '@polkadot/util-crypto';
 import { type ExtrinsicsData, GET_EXTRINSICS } from './queries';
 import BigNumber from 'bignumber.js';
 import TronWeb from 'tronweb';
-export const extractDataAndSignature = (
+export const extractDataSignatureWallet = (
 	content: string,
-): { data: string; signature: string } => {
-	const splitContent = content.split('--');
-	const data = cleanContent(splitContent[2] || '');
-	const signature = cleanContent(splitContent[6] || '');
-
-	if (!data || !signature || data.length === 0 || signature.length === 0) {
+): { data: string; signature: string; wallet: string } => {
+	const data = content.match(
+		/start message --\n([\S\s]*)\n-- end message --/i,
+	);
+	const signature = content.match(
+		/start p3d wallet signature --\n([\S\s]*)\n-- end p3d wallet signature --/i,
+	);
+	const wallet = content.match(
+		/start public key --\n([\S\s]*)\n-- end public key --/i,
+	);
+	if (
+		!wallet ||
+		!wallet[1] ||
+		wallet[1].length === 0 ||
+		!signature ||
+		!signature[1] ||
+		signature[1].length === 0 ||
+		!data ||
+		!data[1] ||
+		data[1].length === 0
+	) {
 		throw new Error('Failed to extract data and signature from message.');
 	}
 
-	return { data, signature };
-};
-
-const cleanContent = (input: string) => {
-	const cleanedInput = input.trim().replace(/\n/g, '!@#$%').slice(5, -5); // TODO: replace slice with getBetween !@#$% and !@#$%
-
-	return cleanedInput;
+	return { data: data[1], signature: signature[1], wallet: wallet[1] };
 };
 
 /** Require On-Chain state to be set with a Display Name */

@@ -14,7 +14,9 @@ discordClient.on(Events.MessageUpdate, async (message) => {
 	) {
 		return;
 	}
-	await validateMessageSignature(message, message.content, 1);
+	await validateMessageSignature(message, message.content, 1).catch(() => {
+		// Ignore errors
+	});
 });
 
 discordClient.on(Events.MessageCreate, async (message) => {
@@ -25,5 +27,7 @@ discordClient.on(Events.MessageCreate, async (message) => {
 	) {
 		return;
 	}
-	await validateMessageSignature(message, message.content, 1);
+	await validateMessageSignature(message, message.content, 1).catch(() => {
+		// Ignore errors
+	});
 });

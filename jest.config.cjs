@@ -15,7 +15,7 @@ const config = {
 	testTimeout: 60000,
 	extensionsToTreatAsEsm: ['.ts'],
 	clearMocks: true,
-	collectCoverage: true,
+	collectCoverage: false,
 	coverageProvider: 'v8',
 	coverageReporters: ['text', 'lcov'],
 	collectCoverageFrom: ['src/**/*.ts'],

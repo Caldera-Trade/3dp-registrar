@@ -3,7 +3,7 @@ import { signatureVerify } from '@polkadot/util-crypto';
 import { AttachmentBuilder, Message, PartialMessage } from 'discord.js';
 import { requestJudgementImage } from './assets/request-judgement';
 import {
-	extractDataAndSignature,
+	extractDataSignatureWallet,
 	isJudgementRequestSubmitted,
 	provideJudgement,
 	verifyOnChainIdentity,
@@ -22,7 +22,7 @@ export const validateMessageSignature = async (
 		/** Extract Data From Message
 		 * Differentiate data positions based on channel
 		 */
-		const { data, signature } = extractDataAndSignature(content);
+		const { data, signature } = extractDataSignatureWallet(content);
 		let trxAddress = '';
 		let walletAddress = '';
 		let splitData = data.split('!@#$%');
