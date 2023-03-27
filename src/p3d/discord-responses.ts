@@ -8,7 +8,7 @@ import {
 	provideJudgement,
 	verifyOnChainIdentity,
 } from './verification';
-import TronWeb from 'tronweb';
+// import TronWeb from 'tronweb';
 import BigNumber from 'bignumber.js';
 
 export const validateMessageSignature = async (
