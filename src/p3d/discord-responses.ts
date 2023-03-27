@@ -22,34 +22,17 @@ export const validateMessageSignature = async (
 		/** Extract Data From Message
 		 * Differentiate data positions based on channel
 		 */
-		const { data, signature } = extractDataSignatureWallet(content);
-		let trxAddress = '';
-		let walletAddress = '';
-		let splitData = data.split('!@#$%');
-		if (splitData.length === 1) splitData = data.split(' '); // Workaround for next-line-less messages until Regex is implemented
-
-		switch (message.channel.id) {
-			case '1085692832838324254':
-				walletAddress = splitData[0]?.trim() || '';
-				trxAddress = splitData[1]?.trim() || '';
-				break;
-			case '1078937364665217126':
-				walletAddress = splitData[0]?.trim() || '';
-				break;
-			default:
-				break;
-		}
-
-		if (!walletAddress) {
-			throw new Error('Failed to extract wallet address from message.');
-		}
-
+		const {
+			data: discordTag,
+			signature,
+			wallet,
+		} = extractDataSignatureWallet(content);
 		/** Validate Discord Tag Matches Users, and is somewhere in the message */
 		if (!message.member?.user.tag) {
 			throw new Error('Failed to extract discord tag from member.');
 		}
 		if (
-			!data
+			!discordTag
 				.replaceAll(' ', '')
 				.includes(message.member.user.tag.replaceAll(' ', ''))
 		) {
@@ -59,21 +42,17 @@ export const validateMessageSignature = async (
 			);
 		}
 
-		/** Validate Tron Address */
-		if (trxAddress !== '' && !TronWeb.isAddress(trxAddress)) {
-			return discordErrorReply(
-				message,
-				`TRX Wallet Address \`${trxAddress}\` is not valid.\n<https://tronscan.org/#/address/${trxAddress}>`,
-			);
-		}
+		/** Validate Tron Address TODO: Re-enable on next funding round with structure */
+		// if (trxAddress !== '' && !TronWeb.isAddress(trxAddress)) {
+		// 	return discordErrorReply(
+		// 		message,
+		// 		`TRX Wallet Address \`${trxAddress}\` is not valid.\n<https://tronscan.org/#/address/${trxAddress}>`,
+		// 	);
+		// }
 
 		/** Validate Signature Matches Data Provided */
-		const signatureData = stringToU8a(data.replaceAll('!@#$%', ' '));
-		const { isValid } = signatureVerify(
-			signatureData,
-			signature,
-			walletAddress,
-		);
+		const signatureData = stringToU8a(discordTag.replaceAll('!@#$%', ' '));
+		const { isValid } = signatureVerify(signatureData, signature, wallet);
 		if (!isValid) {
 			return discordErrorReply(
 				message,
@@ -89,7 +68,7 @@ export const validateMessageSignature = async (
 
 		/** Validate On-Chain-Identity */
 		const { isReasonable, discordMatches, hasOnChainIdentity } =
-			await verifyOnChainIdentity(walletAddress, message.member.user.tag);
+			await verifyOnChainIdentity(wallet, message.member.user.tag);
 		if (!hasOnChainIdentity) {
 			return discordErrorReply(
 				message,
@@ -119,7 +98,7 @@ export const validateMessageSignature = async (
 		/** Validate Reasonable Judgement */
 		if (!isReasonable) {
 			const judgmentRequestSubmitted = await isJudgementRequestSubmitted(
-				walletAddress,
+				wallet,
 				registrarIndex,
 				registrarFee,
 			);
@@ -143,12 +122,12 @@ export const validateMessageSignature = async (
 					[imageAttachment],
 				);
 			} else {
-				await provideJudgement(walletAddress, mnemonic, registrarIndex);
+				await provideJudgement(wallet, mnemonic, registrarIndex);
 				return discordSuccessReply(
 					message,
 					[
 						`Successfully Validated! 'Reasonable' judgement is actively being applied.`,
-						`In a few blocks, you should see your identity here: <https://explorer.3dpass.org/account/${walletAddress}>`,
+						`In a few blocks, you should see your identity here: <https://explorer.3dpass.org/account/${wallet}>`,
 					].join('\n'),
 					60_000,
 				);

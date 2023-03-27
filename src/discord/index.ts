@@ -3,7 +3,7 @@ import { validateMessageSignature } from 'src/p3d/discord-responses';
 import { discordClient } from './client';
 
 const monitoringChannels = new Set([
-	'1085692832838324254',
+	// '1085692832838324254',
 	'1078937364665217126',
 ]);
 discordClient.on(Events.MessageUpdate, async (message) => {
