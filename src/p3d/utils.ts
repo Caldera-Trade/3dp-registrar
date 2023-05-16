@@ -6,7 +6,7 @@ if (walletMnemonic === '') {
 }
 
 // RPC API
-const apiEndpoint = 'wss://rpc2.3dpass.org';
+const apiEndpoint = 'wss://rpc.3dpscan.io';
 export const apiExplorerEndpoint = 'https://explorer-api.3dpass.org/graphql/';
 
 export const ss58Format = 71;
