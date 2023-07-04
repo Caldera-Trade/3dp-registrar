@@ -28,17 +28,17 @@ export const validateMessageSignature = async (
 			wallet,
 		} = extractDataSignatureWallet(content);
 		/** Validate Discord Tag Matches Users, and is somewhere in the message */
-		if (!message.member?.user.tag) {
+		if (!message.member?.user.username) {
 			throw new Error('Failed to extract discord tag from member.');
 		}
 		if (
 			!discordTag
 				.replaceAll(' ', '')
-				.includes(message.member.user.tag.replaceAll(' ', ''))
+				.includes(message.member.user.username.replaceAll(' ', ''))
 		) {
 			return discordErrorReply(
 				message,
-				`Discord tag ${message.member.user.tag} cannot be found in your message.`,
+				`Discord tag ${message.member.user.username} cannot be found in your message.`,
 			);
 		}
 
@@ -68,7 +68,7 @@ export const validateMessageSignature = async (
 
 		/** Validate On-Chain-Identity */
 		const { isReasonable, discordMatches, hasOnChainIdentity } =
-			await verifyOnChainIdentity(wallet, message.member.user.tag);
+			await verifyOnChainIdentity(wallet, message.member.user.username);
 		if (!hasOnChainIdentity) {
 			return discordErrorReply(
 				message,
@@ -86,7 +86,7 @@ export const validateMessageSignature = async (
 			return discordErrorReply(
 				message,
 				[
-					`On-chain identity is invalid, ${message.member.user.tag} was not found in the \`discord\` Identity.`,
+					`On-chain identity is invalid, ${message.member.user.username} was not found in the \`discord\` Identity.`,
 					`Please update your on-chain identity's \`discord\` information here: https://polkadot.js.org/apps/#/accounts`,
 					``,
 					`Once the identity update is accepted by the chain, please try again.`,
