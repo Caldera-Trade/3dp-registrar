@@ -7,8 +7,7 @@ if (walletMnemonic === '') {
 
 // RPC API
 const apiEndpoint = 'wss://rpc.3dpscan.io';
-export const apiExplorerEndpoint = 'https://explorer-api.3dpass.org/graphql/';
-
+export const apiExplorerEndpoint = 'https://explorer-api.3dpscan.io/graphql/';
 export const ss58Format = 71;
 
 export const keyring = new Keyring({ type: 'sr25519', ss58Format });
