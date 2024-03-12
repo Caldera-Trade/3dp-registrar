@@ -50,9 +50,29 @@ export const verifyOnChainIdentity = async (
 
 	const api = await getPolkadotApi();
 	const identity = await api.query.identity.identityOf(walletAddress);
+	const humanIdentity = identity.toHuman()as {
+		judgements:[
+			string,
+			string | 'Reasonable',
+		][],
+		deposit: string,
+		info: {
+		  additional: [
+			{ Raw: string | 'Discord' },
+			{ Raw: string },
+		][],
+		  display: { Raw: string },
+		  legal: { Raw: string },
+		  web: { Raw: string },
+		  riot: 'None',
+		  email: { Raw: string },
+		  pgpFingerprint: null,
+		  image: 'None',
+		  twitter: { Raw: string }
+		}
+	  };
 	if (
-		identity.isNone ||
-		identity.value.info.display.toString().length === 0
+		identity.isNone || (humanIdentity.info.display.Raw === "" || humanIdentity.info.display.Raw === "None")
 	) {
 		return {
 			hasOnChainIdentity,
@@ -63,10 +83,7 @@ export const verifyOnChainIdentity = async (
 	hasOnChainIdentity = true;
 
 	/** Validate Discord Tag Matches Users, and is somewhere in the message */
-	const additionalIdentities = identity.value.info.additional.toHuman() as [
-		{ Raw: string | 'Discord' },
-		{ Raw: string },
-	][];
+	const additionalIdentities = humanIdentity.info.additional;
 
 	if (!additionalIdentities[0])
 		return { hasOnChainIdentity, isReasonable, discordMatches };
@@ -74,6 +91,7 @@ export const verifyOnChainIdentity = async (
 	// Convert discordTag string into a hex string
 	const discordTagHex = TronWeb.toHex(discordTag) as string;
 
+	console.log(additionalIdentities);
 	discordMatches = additionalIdentities.some(
 		(x) =>
 			x[0].Raw === 'Discord' &&
@@ -81,11 +99,7 @@ export const verifyOnChainIdentity = async (
 	);
 
 	/** Validate Reasonably Judged at least once */
-	const humanReadable = identity.value.judgements.toHuman() as [
-		string,
-		string | 'Reasonable',
-	][];
-	isReasonable = humanReadable.some(
+	isReasonable = humanIdentity.judgements.some(
 		(judgement) => judgement[1] === 'Reasonable',
 	);
 
