@@ -1,6 +1,6 @@
 import { Events, MessageType } from 'discord.js';
-import { validateMessageSignature } from 'src/p3d/discord-responses';
-import { discordClient } from './client';
+import { validateMessageSignature } from '../p3d/discord-responses.js';
+import { discordClient } from './client.js';
 
 const monitoringChannels = new Set([
 	// '1085692832838324254',

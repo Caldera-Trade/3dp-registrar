@@ -10,9 +10,6 @@
 		"sourceMap": true,
 		"declaration": true,
 		"types": ["node", "jest"],
-		"paths": {
-			"src/*": ["src/*"]
-		},
 		"plugins": [
 			// Transform paths in output .js files
 			{ "transform": "typescript-transform-paths" },

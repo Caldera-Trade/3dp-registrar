@@ -1,13 +1,13 @@
 import { stringToU8a } from '@polkadot/util';
 import { signatureVerify } from '@polkadot/util-crypto';
 import { AttachmentBuilder, Message, PartialMessage } from 'discord.js';
-import { requestJudgementImage } from './assets/request-judgement';
+import { requestJudgementImage } from './assets/request-judgement.js';
 import {
 	extractDataSignatureWallet,
 	isJudgementRequestSubmitted,
 	provideJudgement,
 	verifyOnChainIdentity,
-} from './verification';
+} from './verification.js';
 // import TronWeb from 'tronweb';
 import BigNumber from 'bignumber.js';
 

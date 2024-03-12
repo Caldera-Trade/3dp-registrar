@@ -1,2 +1,2 @@
-export { validateMessageSignature } from './p3d/discord-responses';
-export * from './p3d/verification';
+export { validateMessageSignature } from './p3d/discord-responses.js';
+export * from './p3d/verification.js';

@@ -1,9 +1,9 @@
 import '@polkadot/api-augment';
-import { apiExplorerEndpoint, getPolkadotApi, keyring } from './utils';
+import { apiExplorerEndpoint, getPolkadotApi, keyring } from './utils.js';
 import { request } from 'graphql-request';
 import { u8aToHex } from '@polkadot/util';
 import { decodeAddress } from '@polkadot/util-crypto';
-import { type ExtrinsicsData, GET_EXTRINSICS } from './queries';
+import { type ExtrinsicsData, GET_EXTRINSICS } from './queries.js';
 import BigNumber from 'bignumber.js';
 import TronWeb from 'tronweb';
 export const extractDataSignatureWallet = (

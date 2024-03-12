@@ -1,7 +1,7 @@
 import {
 	verifyOnChainIdentity,
 	extractDataSignatureWallet,
-} from './verification';
+} from './verification.js';
 
 describe('extractDataAndSignature', () => {
 	it('should extract data and signature', () => {
